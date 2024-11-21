@@ -1,2 +1,2 @@
 # AdventCalendar
-Developer Advent Calendar made by Blazor WebAssembly
+Developer Advent Calendar made by Blazor WebAssembly.
