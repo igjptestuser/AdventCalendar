@@ -1,4 +1,6 @@
 ﻿@page "/"
+@using System.Text.Json
+@inject HttpClient HttpClient
 
 <PageTitle>Home</PageTitle>
 
@@ -17,31 +19,28 @@
     <div class="weekday">Fri</div>
     <div class="weekday">Sat</div>
 
-    <!-- Days 1 to 25 -->
-    <div class="day sunday"><span>1</span></div>
-    <div class="day"><span>2</span></div>
-    <div class="day"><span>3</span></div>
-    <div class="day"><span>4</span></div>
-    <div class="day"><span>5</span></div>
-    <div class="day"><span>6</span></div>
-    <div class="day saturday"><span>7</span></div>
-    <div class="day sunday"><span>8</span></div>
-    <div class="day"><span>9</span></div>
-    <div class="day"><span>10</span></div>
-    <div class="day"><span>11</span></div>
-    <div class="day"><span>12</span></div>
-    <div class="day"><span>13</span></div>
-    <div class="day saturday"><span>14</span></div>
-    <div class="day sunday"><span>15</span></div>
-    <div class="day"><span>16</span></div>
-    <div class="day"><span>17</span></div>
-    <div class="day"><span>18</span></div>
-    <div class="day"><span>19</span></div>
-    <div class="day"><span>20</span></div>
-    <div class="day saturday"><span>21</span></div>
-    <div class="day sunday"><span>22</span></div>
-    <div class="day"><span>23</span></div>
-    <div class="day"><span>24</span></div>
+    <!-- Days 1 to 24 -->
+    @for (int day = 1; day <= 24; day++)
+    {
+        string dayClass = "day";
+
+        // 土曜日、日曜日の場合のクラス追加
+        if (day % 7 == 1) // 1, 8, 15, 22 → 日曜日 (sunday)
+        {
+            dayClass += " sunday";
+        }
+        else if (day % 7 == 0) // 7, 14, 21 → 土曜日 (saturday)
+        {
+            dayClass += " saturday";
+        }
+
+        <div class="@dayClass">
+            <span>@day</span>
+            <div class="calendar-content">
+                <a class="how-to-contribute" href="">+</a>
+            </div>
+        </div>
+    }
 
     <!-- Days 25 to 28 (Greyed out) -->
     <div class="day greyed-out"><span>25</span></div>
@@ -49,3 +48,26 @@
     <div class="day greyed-out"><span>27</span></div>
     <div class="day greyed-out"><span>28</span></div>
 </div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        //var markdownFiles = await GetMarkdownFiles();
+    }
+
+    private async Task<List<string>> GetMarkdownFiles()
+    {
+        var client = HttpClient;
+        client.DefaultRequestHeaders.UserAgent.ParseAdd("request");
+
+        var response = await client.GetAsync("https://api.github.com/repos/igjp-sample/AdventCalendar/contents/content");
+        if (response.IsSuccessStatusCode)
+        {
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<string>>(jsonResponse);
+        }
+
+        return new List<string>();
+    }
+
+}

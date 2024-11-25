@@ -7,7 +7,7 @@
 }
 
 .day, .weekday {
-    padding: 48px;
+    padding: 10px 14px;
     border: 1px solid #ccc;
     font-size: 1em;
     background-color: #f9f9f9;
@@ -77,4 +77,26 @@ h1::after {
 .title {
     display: flex;
     justify-content: center;
+}
+
+.calendar-content {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+}
+
+.how-to-contribute {
+    text-decoration: none;
+    color: #aaa;
+    font-size: 1.6em;
+    display: flex;
+    width: 100%;
+    text-align: center;
+    height: 100%;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
 }
